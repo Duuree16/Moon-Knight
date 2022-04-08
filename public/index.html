@@ -7,11 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KNIGHT</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <canvas></canvas>
-    <img src="Knight/_Idle.png">
+    <div id="container">
+        <h3 class="tutorial" id="tut"></h3>
+        <canvas></canvas>
+        <div id="inventory">
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+            <div class="inventoryslot"><img></div>
+        </div>
+    </div>
+    <img src="Knight/_Idle.png" class="none">
+    <img src='Items/foldedpaper.png' class="none">
+    <img src='Items/foldedpaper.png' class="none">
+    <img src='Items/healer.png' class="none">
+    <!-- 
+    Hit = Space
+    jump = W
+    move = a,d 
+    -->
+    <script src="class.js"></script>
     <script src="main.js"></script>
 </body>
 

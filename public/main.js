@@ -5,50 +5,42 @@ canvas.width = 750
 const spriteWidth = 120
 const spriteHeight = 80
 const background = new Image()
+const tutorial = document.getElementById('tut')
 const gravity = 0.4
+const imgs = document.getElementsByTagName('img')
+const toEquip = {
+    poison: false,
+    juice: false,
+    paper: false,
+    meat: false,
+    flower: false
+}
+const sp = 8
+const slots = document.getElementsByClassName('inventoryslot')
 var frame = 0
+var i = 0
+var epress = false
 var gameFrame = 0
-var fps = 9
+var closeToItem = false
+var fps = 4
 var animationFrame = 9
 var jump = false
 var current = 'idle'
 var onTheGround = false
 var hit = false
+var slotCount = 0
 background.src = 'lol.png'
-class Knight {
-    constructor() {
-        this.width = 350
-        this.height = 300
-        this.x = 0
-        this.y = 0
-        this.vx = 0
-        this.vy = 0
-        this.image = new Image()
-        this.image.src = "Knight/_Idle.png"
-    }
-    draw() {
-        c.drawImage(this.image, spriteWidth * frame, 0, spriteWidth, spriteHeight, this.x, this.y, this.width, this.height)
-    }
-    update() {
-        this.draw()
-        if (this.y + this.height + this.vy <= canvas.height - 45) {
-            this.vy += gravity;
-        } else {
-            this.vy = 0;
-            jump = false
-            onTheGround = true
-            hit = false
-            if (knight.vx) {
-                current = 'run'
-            }
-        }
-        this.x += this.vx
-        this.y += this.vy
-    }
-}
+
+console.log(slots[slotCount])
 
 const knight = new Knight()
-
+const items = new Array()
+items.push(new Item('Items/foldedpaper.png', 100, 1))
+items.push(new Item('Items/poison.png', 230, 2))
+items.push(new Item('Items/healer.png', 360, 3))
+items.push(new Item('Items/meat.png', 490, 4))
+items.push(new Item('Items/flower.png', 620, 5))
+console.log(imgs)
 
 function animate() {
     c.clearRect(0, 0, canvas.width, canvas.height)
@@ -60,7 +52,6 @@ function animate() {
             frame++
         } else {
             frame = 0
-            console.log('last frame')
             if (current == 'down')
                 current = 'idle'
             if (current == 'slash') {
@@ -68,12 +59,61 @@ function animate() {
             }
             if (jump) {
                 current = 'down'
-                fps = 9
+                fps = 4
             }
         }
     }
     gameFrame++
+    if (closeToItem) {
+        tutorial.innerHTML = 'Press E And Take It Lol'
+    } else {
+        tutorial.innerHTML = ''
+    }
     knight.update()
+    if (toEquip.juice) {
+        imgs[0].src = 'Items/healer.png'
+    }
+    if (toEquip.meat) {
+        imgs[1].src = 'Items/meat.png'
+    }
+    if (toEquip.paper) {
+        imgs[2].src = 'Items/foldedpaper.png'
+    }
+    if (toEquip.poison) {
+        imgs[3].src = 'Items/poison.png'
+    }
+    if (toEquip.flower) {
+        imgs[4].src = 'Items/flower.png'
+    }
+    items.forEach(item => {
+        item.draw()
+        if (knight.x + 20 >= item.x - 150 && knight.x <= item.x - 150 + 50) {
+            i++
+            if (epress == true) {
+                if (item.id == 1) {
+                    toEquip.paper = true
+                }
+                if (item.id == 2) {
+                    toEquip.poison = true
+                }
+                if (item.id == 3) {
+                    toEquip.juice = true
+                }
+                if (item.id == 4) {
+                    toEquip.meat = true
+                }
+                if (item.id == 5) {
+                    toEquip.flower = true
+                }
+            }
+        }
+    })
+    if (i) {
+        closeToItem = true
+        i = 0
+    } else {
+        closeToItem = false
+    }
 }
 animate()
 
@@ -88,7 +128,7 @@ addEventListener('keydown', (e) => {
             break
         case 'w':
             if (!jump) {
-                knight.vy = -8
+                knight.vy = -sp
                 frame = 0
                 fps = 8
                 onTheGround = false
@@ -97,9 +137,12 @@ addEventListener('keydown', (e) => {
             jump = true
             break
         case 'a':
-            knight.vx = -6
+            knight.vx = -sp
             if (onTheGround)
                 current = 'run'
+            break
+        case 'e':
+            epress = true
             break
         case ' ':
             if (onTheGround && !knight.vx && hit == false) {
@@ -121,6 +164,9 @@ addEventListener('keyup', (e) => {
             knight.vx = 0
             if (onTheGround)
                 current = 'idle'
+            break
+        case 'e':
+            epress = false
             break
 
     }
